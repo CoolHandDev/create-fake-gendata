@@ -2,7 +2,7 @@
   "name": "create-fake-gendata",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "generateFakeGenData.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
