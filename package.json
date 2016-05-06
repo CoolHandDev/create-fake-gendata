@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "faker": "^3.1.0"
+    "faker": "^3.1.0",
+    "node-uuid": "^1.4.7"
   }
 }
