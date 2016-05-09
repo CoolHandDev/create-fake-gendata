@@ -135,9 +135,9 @@ if (conversionType.toLowerCase() === 'image') {
                     imageDataString += delimiter + faker.random.words();
                 }
                 if (currentValue === 'pages_in_file_count') {
-                    if(index % 2 === 0){
+                    if(faker.random.number() % 2 === 0){
                         imageDataString += delimiter + '1';
-                    } else if (index % 3 === 0) {
+                    } else if (faker.random.number() % 3 === 0) {
                         imageDataString += delimiter + '4';
                     } else {
                         imageDataString += delimiter + '2';
@@ -271,9 +271,9 @@ if (conversionType.toLowerCase() === 'image') {
                         allergyDataString += delimiter + 'allergy_' + faker.lorem.word();
                     }
                     if (currentValue === 'src_severity') {
-                        if(index % 2 === 0){
+                        if(faker.random.number() % 2 === 0){
                             allergyDataString += delimiter + 'moderate';
-                        } else if (index % 3 === 0) {
+                        } else if (faker.random.number() % 3 === 0) {
                             allergyDataString += delimiter + 'light';
                         } else {
                             allergyDataString += delimiter + 'severe';
