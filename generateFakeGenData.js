@@ -65,10 +65,12 @@ if (conversionType.toLowerCase() === 'image') {
     console.log(generateImageGenData());
 }
 
+if (conversionType.toLowerCase() === 'immunization') {
+    console.log(generateImmunizationGenData());
+}
 
 /*
     Generate the discrete data sets for each clinical type
-
  */
     function generateImageGenData() {
         var imageFields = [
@@ -196,7 +198,178 @@ if (conversionType.toLowerCase() === 'image') {
     }
 
     function generateImmunizationGenData() {
+        var immunizationFields = [
+            'src_patient_id', 'src_patient_lastname'
+            , 'src_patient_firstname', 'src_patient_middlename'
+            , 'src_provider_id', 'src_provider_dea_nbr'
+            , 'src_provider_lastname', 'src_provider_firstname'
+            , 'src_provider_middlename', 'src_location_id'
+            , 'src_location_name', 'encounter_datetime'
+            , 'administer_date', 'cvx_code'
+            , 'cpt4_code', 'vaccine_desc'
+            , 'lot_num', 'expiration_date'
+            , 'manufacturer_name', 'manufacturer_nbr'
+            , 'strength', 'units'
+            , 'dose', 'route'
+            , 'side', 'site'
+            , 'brand_name', 'vaccine_comment'
+            , 'src_administered_by'
+        ];
+
         var immunizationHeader = '';
+        var immunizationStream = fs.createWriteStream(faker.random.uuid() + '_ncs_convImm_GENImmunization.txt')
+
+        buildImmunizationHeader();
+        //TODO: hard code for now. Implement config later so we can determine how to fake data based on fields
+        function buildImmunizationDataRow() {
+            var immunizationDataString = '';
+            immunizationFields.forEach(function(currentValue, index, array) {
+                if (currentValue === 'src_patient_id') {
+                    immunizationDataString += faker.random.uuid();
+                }
+                if (currentValue === 'src_patient_lastname') {
+                    immunizationDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_patient_firstname') {
+                    immunizationDataString += delimiter + faker.name.firstName();
+                }
+                if (currentValue === 'src_patient_middlename') {
+                    immunizationDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_provider_id') {
+                    immunizationDataString += delimiter + faker.random.uuid();
+                }
+                if (currentValue === 'src_provider_dea_nbr') {
+                    immunizationDataString += delimiter + faker.random.number();
+                }
+                if (currentValue === 'src_provider_lastname') {
+                    immunizationDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_provider_firstname') {
+                    immunizationDataString += delimiter + faker.name.firstName();
+                }
+                if (currentValue === 'src_provider_middlename') {
+                    immunizationDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_location_id') {
+                    immunizationDataString += delimiter + faker.random.uuid();
+                }
+                if (currentValue === 'src_location_name') {
+                    immunizationDataString += delimiter + faker.company.companyName();
+                }
+                if (currentValue === 'encounter_datetime') {
+                    immunizationDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
+                }
+                if (currentValue === 'administer_date') {
+                    immunizationDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
+                }
+                if (currentValue === 'cvx_code') {
+                    if(faker.random.number() % 2 === 0){
+                        immunizationDataString += delimiter + '123';
+                    } else if (faker.random.number() % 3 === 0) {
+                        immunizationDataString += delimiter + '05';
+                    } else if (faker.random.number() % 7 === 0) {
+                        immunizationDataString += delimiter + '07';
+                    }
+                    else {
+                        immunizationDataString += delimiter + '89';
+                    }
+                }
+                if (currentValue === 'cpt4_code') {
+                    if(faker.random.number() % 2 === 0){
+                        immunizationDataString += delimiter + '90656';
+                    } else if (faker.random.number() % 3 === 0) {
+                        immunizationDataString += delimiter + '90705';
+                    } else if (faker.random.number() % 7 === 0) {
+                        immunizationDataString += delimiter + '90704';
+                    }
+                    else {
+                        immunizationDataString += delimiter + '90713';
+                    }
+                }
+                if (currentValue === 'vaccine_desc') {
+                    if(faker.random.number() % 2 === 0){
+                        immunizationDataString += delimiter + 'Influenza, seasonal, injectable, preservative free';
+                    } else if (faker.random.number() % 3 === 0) {
+                        immunizationDataString += delimiter + 'measles';
+                    } else if (faker.random.number() % 7 === 0) {
+                        immunizationDataString += delimiter + 'mumps';
+                    }
+                    else {
+                        immunizationDataString += delimiter + 'IPV';
+                    }
+                }
+                if (currentValue === 'lot_num') {
+                    immunizationDataString += delimiter + faker.random.number();
+                }
+                if (currentValue === 'expiration_date') {
+                    immunizationDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
+                }
+                if (currentValue === 'manufacturer_name') {
+                    immunizationDataString += delimiter + faker.company.companyName();
+                }
+                if (currentValue === 'manufacturer_nbr') {
+                    immunizationDataString += delimiter + faker.random.number();
+                }
+                if (currentValue === 'strength') {
+                    immunizationDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'units') {
+                    immunizationDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'dose') {
+                    immunizationDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'route') {
+                    immunizationDataString += delimiter + 'intramuscular';
+                }
+                if (currentValue === 'side') {
+                    immunizationDataString += delimiter + 'left';
+                }
+                if (currentValue === 'site') {
+                    immunizationDataString += delimiter + 'arm';
+                }
+                if (currentValue === 'brand_name') {
+                    immunizationDataString += delimiter + faker.company.companyName();
+                }
+                if (currentValue === 'vaccine_comment') {
+                    immunizationDataString += delimiter + faker.lorem.paragraphs().replace(/[\n\r]/g, '');
+                }
+                if (currentValue === 'src_administered_by') {
+                    immunizationDataString += delimiter + faker.name.lastName();
+                }
+            });
+            immunizationDataString += '\r\n';
+            return immunizationDataString;
+        };
+
+        immunizationStream.once('open', function(fd) {
+            immunizationStream.write(immunizationHeader);
+            immunizationStream.write('\r\n'); //new line before first line of data
+            for(var i = 0; i < numberofRows; i++) {
+                immunizationStream.write(buildImmunizationDataRow());
+
+                if (i % updateFrequency === 0) {
+                    console.log(new Date() + ': # of rows written: ' + i);
+                }
+            }
+            console.log(new Date() + ': # of rows written: ' + i);
+
+            immunizationStream.end();
+        });
+
+        function buildImmunizationHeader() {
+
+            immunizationFields.forEach(function(currentValue, index, array) {
+                if (index === 0) {
+                    immunizationHeader = currentValue
+                } else {
+                    immunizationHeader += delimiter + currentValue;
+                }
+            });
+        }
+
+        return immunizationHeader;
     }
 
     function generateProblemGenData() {
