@@ -1,5 +1,5 @@
 /*
-    This generate a pipe delimited flat file containing fake clinical data
+    This generates a pipe delimited flat file containing fake clinical data
  */
 
 
