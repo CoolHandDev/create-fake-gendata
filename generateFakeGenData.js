@@ -20,6 +20,7 @@ User must pass in paramaters conversion type and number of rows to generate
     2. Immunization
     3. Problem
     4. Allergy
+    5. Vitals
 
 */
     process.argv.forEach(function(val, index, array) {
@@ -69,9 +70,17 @@ if (conversionType.toLowerCase() === 'immunization') {
     console.log(generateImmunizationGenData());
 }
 
+if (conversionType.toLowerCase() === 'vitals') {
+    console.log(generateVitalsGenData());
+}
+
+
+
 /*
     Generate the discrete data sets for each clinical type
  */
+
+    //Image
     function generateImageGenData() {
         var imageFields = [
             'src_patient_id', 'src_patient_lastname'
@@ -148,7 +157,7 @@ if (conversionType.toLowerCase() === 'immunization') {
                 if (currentValue === 'logical_group_id') {
                     imageDataString += delimiter + '0';
                 }
-                if (currentValue === 'page_sequence_number') {
+                if (currentValue === 'page_sequence_nbr') {
                     imageDataString += delimiter + '0';
                 }
                 if (currentValue === 'batch_name') {
@@ -197,6 +206,7 @@ if (conversionType.toLowerCase() === 'immunization') {
 
     }
 
+    //Immunization
     function generateImmunizationGenData() {
         var immunizationFields = [
             'src_patient_id', 'src_patient_lastname'
@@ -372,131 +382,361 @@ if (conversionType.toLowerCase() === 'immunization') {
         return immunizationHeader;
     }
 
+    //Problem and Chronic Problem
     function generateProblemGenData() {
         var problemHeader = '';
 
     }
 
-    //Generate allergy data
-        function generateAllergyGenData() {
-            var allergyFields = [
-                                    'src_patient_id', 'src_patient_lastname'
-                                    , 'src_patient_firstname', 'src_patient_middlename'
-                                    , 'src_provider_id', 'src_provider_dea_nbr'
-                                    , 'src_provider_lastname', 'src_provider_firstname'
-                                    , 'src_provider_middlename', 'src_location_id'
-                                    , 'src_location_name', 'encounter_datetime'
-                                    , 'src_allergy_id', 'src_allergy_desc'
-                                    , 'src_severity', 'date_onset'
-                                    , 'date_resolved', 'rxn_desc'
-                                    , 'allergy_comment'
-                                ];
+    //Allergy
+    function generateAllergyGenData() {
+        var allergyFields = [
+                                'src_patient_id', 'src_patient_lastname'
+                                , 'src_patient_firstname', 'src_patient_middlename'
+                                , 'src_provider_id', 'src_provider_dea_nbr'
+                                , 'src_provider_lastname', 'src_provider_firstname'
+                                , 'src_provider_middlename', 'src_location_id'
+                                , 'src_location_name', 'encounter_datetime'
+                                , 'src_allergy_id', 'src_allergy_desc'
+                                , 'src_severity', 'date_onset'
+                                , 'date_resolved', 'rxn_desc'
+                                , 'allergy_comment'
+                            ];
 
-            var allergyHeader = '';
-            //var uniqId = uuid.v4();
-            var allergyStream = fs.createWriteStream(faker.random.uuid() + '_ncs_convAlg_GENallergy.txt')
+        var allergyHeader = '';
+        //var uniqId = uuid.v4();
+        var allergyStream = fs.createWriteStream(faker.random.uuid() + '_ncs_convAlg_GENallergy.txt')
 
-            buildAllergyHeader();
-            //TODO: hard code for now. Implement config later so we can determine how to fake data based on fields
-            function buildAllergyDataRow() {
-                var allergyDataString = '';
-                allergyFields.forEach(function(currentValue, index, array) {
-                    if (currentValue === 'src_patient_id') {
-                        allergyDataString += faker.random.uuid();
-                    }
-                    if (currentValue === 'src_patient_lastname') {
-                        allergyDataString += delimiter + faker.name.lastName();
-                    }
-                    if (currentValue === 'src_patient_firstname') {
-                        allergyDataString += delimiter + faker.name.firstName();
-                    }
-                    if (currentValue === 'src_patient_middlename') {
-                        allergyDataString += delimiter + faker.name.lastName();
-                    }
-                    if (currentValue === 'src_provider_id') {
-                        allergyDataString += delimiter + faker.random.uuid();
-                    }
-                    if (currentValue === 'src_provider_dea_nbr') {
-                        allergyDataString += delimiter + faker.random.number();
-                    }
-                    if (currentValue === 'src_provider_lastname') {
-                        allergyDataString += delimiter + faker.name.lastName();
-                    }
-                    if (currentValue === 'src_provider_firstname') {
-                        allergyDataString += delimiter + faker.name.firstName();
-                    }
-                    if (currentValue === 'src_provider_middlename') {
-                        allergyDataString += delimiter + faker.name.lastName();
-                    }
-                    if (currentValue === 'src_location_id') {
-                        allergyDataString += delimiter + faker.random.uuid();
-                    }
-                    if (currentValue === 'src_location_name') {
-                        allergyDataString += delimiter + faker.company.companyName();
-                    }
-                    if (currentValue === 'encounter_datetime') {
-                        allergyDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
-                    }
-                    if (currentValue === 'src_allergy_id') {
-                        allergyDataString += delimiter + faker.random.uuid();
-                    }
-                    if (currentValue === 'src_allergy_desc') {
-                        allergyDataString += delimiter + 'allergy_' + faker.lorem.word();
-                    }
-                    if (currentValue === 'src_severity') {
-                        if(faker.random.number() % 2 === 0){
-                            allergyDataString += delimiter + 'moderate';
-                        } else if (faker.random.number() % 3 === 0) {
-                            allergyDataString += delimiter + 'light';
-                        } else {
-                            allergyDataString += delimiter + 'severe';
-                        }
-                    }
-                    if (currentValue === 'date_onset') {
-                        allergyDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
-                    }
-                    if (currentValue === 'date_resolved') {
-                        allergyDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
-                    }
-                    if (currentValue === 'rxn_desc') {
-                        allergyDataString += delimiter + faker.lorem.sentence();
-                    }
-                    if (currentValue === 'allergy_comment') {
-                        allergyDataString += delimiter + faker.lorem.paragraph();
-                    }
-                });
-                allergyDataString += '\r\n';
-                return allergyDataString;
-            };
-
-            allergyStream.once('open', function(fd) {
-                allergyStream.write(allergyHeader);
-                allergyStream.write('\r\n'); //new line before first line of data
-                for(var i = 0; i < numberofRows; i++) {
-                    allergyStream.write(buildAllergyDataRow());
-
-                    if (i % updateFrequency === 0) {
-                        console.log(new Date() + ': # of rows written: ' + i);
+        buildAllergyHeader();
+        //TODO: hard code for now. Implement config later so we can determine how to fake data based on fields
+        function buildAllergyDataRow() {
+            var allergyDataString = '';
+            allergyFields.forEach(function(currentValue, index, array) {
+                if (currentValue === 'src_patient_id') {
+                    allergyDataString += faker.random.uuid();
+                }
+                if (currentValue === 'src_patient_lastname') {
+                    allergyDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_patient_firstname') {
+                    allergyDataString += delimiter + faker.name.firstName();
+                }
+                if (currentValue === 'src_patient_middlename') {
+                    allergyDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_provider_id') {
+                    allergyDataString += delimiter + faker.random.uuid();
+                }
+                if (currentValue === 'src_provider_dea_nbr') {
+                    allergyDataString += delimiter + faker.random.number();
+                }
+                if (currentValue === 'src_provider_lastname') {
+                    allergyDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_provider_firstname') {
+                    allergyDataString += delimiter + faker.name.firstName();
+                }
+                if (currentValue === 'src_provider_middlename') {
+                    allergyDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_location_id') {
+                    allergyDataString += delimiter + faker.random.uuid();
+                }
+                if (currentValue === 'src_location_name') {
+                    allergyDataString += delimiter + faker.company.companyName();
+                }
+                if (currentValue === 'encounter_datetime') {
+                    allergyDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
+                }
+                if (currentValue === 'src_allergy_id') {
+                    allergyDataString += delimiter + faker.random.uuid();
+                }
+                if (currentValue === 'src_allergy_desc') {
+                    allergyDataString += delimiter + 'allergy_' + faker.lorem.word();
+                }
+                if (currentValue === 'src_severity') {
+                    if(faker.random.number() % 2 === 0){
+                        allergyDataString += delimiter + 'moderate';
+                    } else if (faker.random.number() % 3 === 0) {
+                        allergyDataString += delimiter + 'light';
+                    } else {
+                        allergyDataString += delimiter + 'severe';
                     }
                 }
-                console.log(new Date() + ': # of rows written: ' + i);
-
-                allergyStream.end();
+                if (currentValue === 'date_onset') {
+                    allergyDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
+                }
+                if (currentValue === 'date_resolved') {
+                    allergyDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
+                }
+                if (currentValue === 'rxn_desc') {
+                    allergyDataString += delimiter + faker.lorem.sentence();
+                }
+                if (currentValue === 'allergy_comment') {
+                    allergyDataString += delimiter + faker.lorem.paragraph();
+                }
             });
+            allergyDataString += '\r\n';
+            return allergyDataString;
+        };
 
+        allergyStream.once('open', function(fd) {
+            allergyStream.write(allergyHeader);
+            allergyStream.write('\r\n'); //new line before first line of data
+            for(var i = 0; i < numberofRows; i++) {
+                allergyStream.write(buildAllergyDataRow());
 
-
-            function buildAllergyHeader() {
-
-                allergyFields.forEach(function(currentValue, index, array) {
-                    if (index === 0) {
-                        allergyHeader = currentValue
-                    } else {
-                        allergyHeader += delimiter + currentValue;
-                    }
-                });
+                if (i % updateFrequency === 0) {
+                    console.log(new Date() + ': # of rows written: ' + i);
+                }
             }
+            console.log(new Date() + ': # of rows written: ' + i);
 
-            return allergyHeader;
+            allergyStream.end();
+        });
 
+
+
+        function buildAllergyHeader() {
+
+            allergyFields.forEach(function(currentValue, index, array) {
+                if (index === 0) {
+                    allergyHeader = currentValue
+                } else {
+                    allergyHeader += delimiter + currentValue;
+                }
+            });
         }
+
+        return allergyHeader;
+
+    }
+
+    //Vitals
+    function generateVitalsGenData() {
+        var vitalsFields = [
+            'src_patient_id', 'src_patient_lastname'
+            , 'src_patient_firstname', 'src_patient_middlename'
+            , 'src_provider_id', 'src_provider_dea_nbr'
+            , 'src_provider_lastname', 'src_provider_firstname'
+            , 'src_provider_middlename', 'src_location_id'
+            , 'src_location_name', 'encounter_datetime'
+            , 'vitals_datetime', 'vitals_comments'
+            , 'temp_deg_F', 'temp_deg_C'
+            , 'temp_site', 'temp_comment'
+            , 'pulse_rate', 'pulse_pattern'
+            , 'pulse_site', 'pulse_method'
+            , 'pulse_ox_rest', 'pulse_ox_amb'
+            , 'pulse_ox_timing', 'pulse_comment'
+            , 'resp_rate', 'resp_pattern'
+            , 'resp_comment', 'height_in'
+            , 'height_ft', 'height_cm'
+            , 'height_m', 'height_comment'
+            , 'weight_oz', 'weight_gm'
+            , 'weight_kg', 'weight_lb'
+            , 'weight_comment', 'bmi_calc'
+            , 'bp_site', 'bp_body_position'
+            , 'bp_systolic', 'bp_diastolic'
+            , 'bp_cuff_size', 'bp_comment'
+            , 'head_circ_in', 'head_circ_cm'
+            , 'peakFlow', 'peakFlowComments'
+        ];
+
+        var vitalsHeader = '';
+        //var uniqId = uuid.v4();
+        var vitalsStream = fs.createWriteStream(faker.random.uuid() + '_ncs_convVtl_GENVitals.txt')
+
+        buildVitalsHeader();
+        //TODO: hard code for now. Implement config later so we can determine how to fake data based on fields
+        function buildVitalsDataRow() {
+            var vitalsDataString = '';
+            vitalsFields.forEach(function(currentValue, index, array) {
+                if (currentValue === 'src_patient_id') {
+                    vitalsDataString += faker.random.uuid();
+                }
+                if (currentValue === 'src_patient_lastname') {
+                    vitalsDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_patient_firstname') {
+                    vitalsDataString += delimiter + faker.name.firstName();
+                }
+                if (currentValue === 'src_patient_middlename') {
+                    vitalsDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_provider_id') {
+                    vitalsDataString += delimiter + faker.random.uuid();
+                }
+                if (currentValue === 'src_provider_dea_nbr') {
+                    vitalsDataString += delimiter + faker.random.number();
+                }
+                if (currentValue === 'src_provider_lastname') {
+                    vitalsDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_provider_firstname') {
+                    vitalsDataString += delimiter + faker.name.firstName();
+                }
+                if (currentValue === 'src_provider_middlename') {
+                    vitalsDataString += delimiter + faker.name.lastName();
+                }
+                if (currentValue === 'src_location_id') {
+                    vitalsDataString += delimiter + faker.random.uuid();
+                }
+                if (currentValue === 'src_location_name') {
+                    vitalsDataString += delimiter + faker.company.companyName();
+                }
+                if (currentValue === 'encounter_datetime') {
+                    vitalsDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
+                }
+                if (currentValue === 'vitals_datetime') {
+                    vitalsDataString += delimiter + (faker.date.past().getMonth() + 1) + '/' + (faker.date.past().getDate()) + '/' + (faker.date.past().getFullYear());
+                }
+                if (currentValue === 'vitals_comments') {
+                    vitalsDataString += delimiter + faker.lorem.sentence()
+                }
+                if (currentValue === 'temp_deg_F') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'temp_deg_C') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'temp_site') {
+                    vitalsDataString += delimiter + 'forehead';
+                }
+                if (currentValue === 'temp_comment') {
+                    vitalsDataString += delimiter + faker.lorem.sentence();
+                }
+                if (currentValue === 'pulse_rate') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'pulse_pattern') {
+                    vitalsDataString += delimiter + 'regular';
+                }
+                if (currentValue === 'pulse_site') {
+                    vitalsDataString += delimiter + 'wrist';
+                }
+                if (currentValue === 'pulse_method') {
+                    vitalsDataString += delimiter + 'manual';
+                }
+                if (currentValue === 'pulse_ox_rest') {
+                    vitalsDataString += delimiter + '70';
+                }
+                if (currentValue === 'pulse_ox_amb') {
+                    vitalsDataString += delimiter + '100';
+                }
+                if (currentValue === 'pulse_ox_timing') {
+                    vitalsDataString += delimiter + '10 seconds';
+                }
+                if (currentValue === 'pulse_comment') {
+                    vitalsDataString += delimiter + faker.lorem.sentence();
+                }
+                if (currentValue === 'resp_rate') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'resp_pattern') {
+                    vitalsDataString += delimiter + 'regular';
+                }
+                if (currentValue === 'resp_comment') {
+                    vitalsDataString += delimiter + faker.lorem.sentence();
+                }
+                if (currentValue === 'height_in') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'height_ft') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'height_cm') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'height_m') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'height_comment') {
+                    vitalsDataString += delimiter + faker.lorem.sentence();
+                }
+                if (currentValue === 'weight_oz') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'weight_gm') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'weight_kg') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'weight_lb') {
+                    vitalsDataString += delimiter + faker.random.number() / 1000;
+                }
+                if (currentValue === 'weight_comment') {
+                    vitalsDataString += delimiter + faker.lorem.sentence() / 1000;
+                }
+                if (currentValue === 'bmi_calc') {
+                    vitalsDataString += delimiter + Math.floor(Math.random() * (30 - 20 + 1)) + 20;
+                }
+                if (currentValue === 'bmi_site') {
+                    vitalsDataString += delimiter + 'stomach';
+                }
+                if (currentValue === 'bp_site') {
+                    vitalsDataString += delimiter + 'left arm';
+                }
+                if (currentValue === 'bp_body_position') {
+                    vitalsDataString += delimiter + 'sitting';
+                }
+                if (currentValue === 'bp_systolic') {
+                    vitalsDataString += delimiter + Math.floor(Math.random() * (140 - 100 + 1)) + 100;
+                }
+                if (currentValue === 'bp_diastolic') {
+                    vitalsDataString += delimiter + Math.floor(Math.random() * (115 - 70 + 1)) + 115;
+                }
+                if (currentValue === 'bp_cuff_size') {
+                    vitalsDataString += delimiter + Math.floor(Math.random() * (10 - 6 + 1)) + 10;
+                }
+                if (currentValue === 'bp_comment') {
+                    vitalsDataString += delimiter + faker.lorem.sentence();
+                }
+                if (currentValue === 'head_circ_in') {
+                    vitalsDataString += delimiter + Math.floor(Math.random() * (15 - 6 + 1)) + 15;
+                }
+                if (currentValue === 'head_circ_cm') {
+                    vitalsDataString += delimiter + Math.floor(Math.random() * (30 - 15 + 1)) + 30;
+                }
+                if (currentValue === 'peakFlow') {
+                    vitalsDataString += delimiter + faker.random.number();
+                }
+                if (currentValue === 'peakFlowComments') {
+                    vitalsDataString += delimiter + faker.lorem.sentence();
+                }
+            });
+            vitalsDataString += '\r\n';
+            return vitalsDataString;
+        };
+
+        vitalsStream.once('open', function(fd) {
+            vitalsStream.write(vitalsHeader);
+            vitalsStream.write('\r\n'); //new line before first line of data
+            for(var i = 0; i < numberofRows; i++) {
+                vitalsStream.write(buildVitalsDataRow());
+
+                if (i % updateFrequency === 0) {
+                    console.log(new Date() + ': # of rows written: ' + i);
+                }
+            }
+            console.log(new Date() + ': # of rows written: ' + i);
+
+            vitalsStream.end();
+        });
+
+
+
+        function buildVitalsHeader() {
+
+            vitalsFields.forEach(function(currentValue, index, array) {
+                if (index === 0) {
+                    vitalsHeader = currentValue
+                } else {
+                    vitalsHeader += delimiter + currentValue;
+                }
+            });
+        }
+
+        return vitalsHeader;
+
+    }
