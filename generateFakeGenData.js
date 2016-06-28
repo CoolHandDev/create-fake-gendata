@@ -480,12 +480,16 @@ if (conversionType.toLowerCase() === 'vitals') {
             return allergyDataString;
         };
 
+        //TODO: add contigency for backpressure.  
         allergyStream.once('open', function(fd) {
             allergyStream.write(allergyHeader);
             allergyStream.write('\r\n'); //new line before first line of data
+            var isBufferFull;
             for(var i = 0; i < numberofRows; i++) {
-                allergyStream.write(buildAllergyDataRow());
-
+                isBufferFull = allergyStream.write(buildAllergyDataRow());
+                if(isBufferFull) {
+                    console.log('BUFFER IS FULL');
+                }
                 if (i % updateFrequency === 0) {
                     console.log(new Date() + ': # of rows written: ' + i);
                 }
